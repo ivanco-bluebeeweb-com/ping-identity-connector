@@ -19,7 +19,7 @@ from schemas import (
     ListSignOnPoliciesParams, ListUsersParams, MfaDeviceList, NoParams,
     PingApplication, PingConnection, PingGroup, PingIdentityProvider,
     PingMfaDevice, PingPopulation, PingSignOnPolicy, PingUser,
-    PopulationIdParams, PopulationList, RemoveMfaDeviceParams,
+    MfaDeviceParams, PopulationIdParams, PopulationList,
     SignOnPolicyIdParams, SignOnPolicyList, UpdateUserParams, UserIdParams,
     UserList,
 )
@@ -261,7 +261,7 @@ async def list_user_mfa_devices(ctx, params: ListMfaDevicesParams) -> ActionResu
 
 
 @chat.function("remove_user_mfa_device", "Remove one enrolled MFA device from a PingOne user -- use when a user has lost their device.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.remove_user_mfa_device", effects=["ping.user.mfa_device_removed"])
-async def remove_user_mfa_device(ctx, params: RemoveMfaDeviceParams) -> ActionResult:
+async def remove_user_mfa_device(ctx, params: MfaDeviceParams) -> ActionResult:
     """Remove one enrolled MFA device from a PingOne user -- use when a user has lost their device."""
     c = await _resolve_connection(ctx, params.connection_id)
     client = _client_for(c)

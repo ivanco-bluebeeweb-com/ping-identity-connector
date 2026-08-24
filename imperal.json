@@ -1,0 +1,4894 @@
+{
+  "manifest_schema_version": 3,
+  "sdk_version": "5.11.0",
+  "app_id": "ping-identity-connector",
+  "version": "0.1.0",
+  "name": "Ping Identity",
+  "description": "Connect your own PingOne environment (Worker Application) to manage Users, Groups, Populations, Applications, Sign-On Policies and Identity Providers, plus review the Activity log for security visibility.",
+  "icon": "icon.svg",
+  "actions_explicit": true,
+  "system": false,
+  "capabilities": [
+    "ping:read",
+    "ping:write"
+  ],
+  "tools": [
+    {
+      "name": "connect_ping",
+      "description": "Connect a PingOne environment via a Worker Application (client credentials), after verifying connectivity.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.provider.connected"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "label": {
+            "default": "",
+            "description": "Friendly environment label, e.g. 'Acme Production'.",
+            "title": "Label",
+            "type": "string"
+          },
+          "region": {
+            "default": "NA",
+            "description": "PingOne region: NA, EU, AP, or CA.",
+            "title": "Region",
+            "type": "string"
+          },
+          "environment_id": {
+            "description": "PingOne environment ID (UUID), from Environment > Overview.",
+            "title": "Environment Id",
+            "type": "string"
+          },
+          "client_id": {
+            "description": "Worker Application client ID.",
+            "title": "Client Id",
+            "type": "string"
+          },
+          "client_secret": {
+            "description": "Worker Application client secret.",
+            "title": "Client Secret",
+            "type": "string"
+          }
+        },
+        "required": [
+          "environment_id",
+          "client_id",
+          "client_secret"
+        ],
+        "title": "ConnectPingParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "connection_id": {
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "environment_id": {
+            "title": "Environment Id",
+            "type": "string"
+          },
+          "region": {
+            "title": "Region",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "connection_id",
+          "label",
+          "environment_id",
+          "region"
+        ],
+        "title": "PingConnection",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.connect_ping",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "disconnect_ping",
+      "description": "Disconnect a PingOne environment: deletes only the saved credentials. Nothing in PingOne itself is changed.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.provider.disconnected"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "description": "Saved PingOne environment connection ID to remove from Imperal.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "connection_id"
+        ],
+        "title": "DisconnectPingParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.disconnect_ping",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_connections",
+      "description": "List the connected PingOne environments.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {},
+        "title": "NoParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "PingConnection": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "connection_id": {
+                "title": "Connection Id",
+                "type": "string"
+              },
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "environment_id": {
+                "title": "Environment Id",
+                "type": "string"
+              },
+              "region": {
+                "title": "Region",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "connection_id",
+              "label",
+              "environment_id",
+              "region"
+            ],
+            "title": "PingConnection",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "connections": {
+            "items": {
+              "$ref": "#/$defs/PingConnection"
+            },
+            "title": "Connections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "connections"
+        ],
+        "title": "ConnectionList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_connections",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_users",
+      "description": "List users in the connected PingOne environment, optionally filtered by a search string.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "q": {
+            "default": "",
+            "description": "Optional search filter matching username/email prefix.",
+            "title": "Q",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max users to return (1-200).",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ListUsersParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "PingUser": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "user_id": {
+                "title": "User Id",
+                "type": "string"
+              },
+              "username": {
+                "title": "Username",
+                "type": "string"
+              },
+              "email": {
+                "title": "Email",
+                "type": "string"
+              },
+              "given_name": {
+                "title": "Given Name",
+                "type": "string"
+              },
+              "family_name": {
+                "title": "Family Name",
+                "type": "string"
+              },
+              "enabled": {
+                "title": "Enabled",
+                "type": "boolean"
+              },
+              "population_id": {
+                "title": "Population Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "user_id",
+              "username",
+              "email",
+              "given_name",
+              "family_name",
+              "enabled",
+              "population_id"
+            ],
+            "title": "PingUser",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "users": {
+            "items": {
+              "$ref": "#/$defs/PingUser"
+            },
+            "title": "Users",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "users"
+        ],
+        "title": "UserList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_users",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "get_user",
+      "description": "Read one PingOne user in full.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "UserIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "user_id": {
+            "title": "User Id",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "given_name": {
+            "title": "Given Name",
+            "type": "string"
+          },
+          "family_name": {
+            "title": "Family Name",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "population_id": {
+            "title": "Population Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "user_id",
+          "username",
+          "email",
+          "given_name",
+          "family_name",
+          "enabled",
+          "population_id"
+        ],
+        "title": "PingUser",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.get_user",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "create_user",
+      "description": "Create a new PingOne user in a population.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.user.created"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "username": {
+            "description": "Username (often the email address).",
+            "title": "Username",
+            "type": "string"
+          },
+          "email": {
+            "description": "User's email address.",
+            "title": "Email",
+            "type": "string"
+          },
+          "given_name": {
+            "default": "",
+            "description": "First name.",
+            "title": "Given Name",
+            "type": "string"
+          },
+          "family_name": {
+            "default": "",
+            "description": "Last name.",
+            "title": "Family Name",
+            "type": "string"
+          },
+          "population_id": {
+            "description": "Population ID this user belongs to.",
+            "title": "Population Id",
+            "type": "string"
+          },
+          "password": {
+            "default": "",
+            "description": "Optional initial password (if population's password policy allows admin-set passwords).",
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "population_id"
+        ],
+        "title": "CreateUserParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "user_id": {
+            "title": "User Id",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "given_name": {
+            "title": "Given Name",
+            "type": "string"
+          },
+          "family_name": {
+            "title": "Family Name",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "population_id": {
+            "title": "Population Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "user_id",
+          "username",
+          "email",
+          "given_name",
+          "family_name",
+          "enabled",
+          "population_id"
+        ],
+        "title": "PingUser",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.create_user",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "update_user",
+      "description": "Update selected fields of an existing PingOne user. Only given fields change.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.user.updated"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          },
+          "email": {
+            "default": "",
+            "description": "New email address, or leave blank to keep unchanged.",
+            "title": "Email",
+            "type": "string"
+          },
+          "given_name": {
+            "default": "",
+            "description": "New first name, or leave blank to keep unchanged.",
+            "title": "Given Name",
+            "type": "string"
+          },
+          "family_name": {
+            "default": "",
+            "description": "New last name, or leave blank to keep unchanged.",
+            "title": "Family Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "UpdateUserParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "user_id": {
+            "title": "User Id",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "given_name": {
+            "title": "Given Name",
+            "type": "string"
+          },
+          "family_name": {
+            "title": "Family Name",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "population_id": {
+            "title": "Population Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "user_id",
+          "username",
+          "email",
+          "given_name",
+          "family_name",
+          "enabled",
+          "population_id"
+        ],
+        "title": "PingUser",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.update_user",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "enable_user",
+      "description": "Enable a disabled PingOne user, restoring their sign-in access.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.user.enabled"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "UserIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.enable_user",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "disable_user",
+      "description": "Disable a PingOne user, blocking their sign-in.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.user.disabled"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "UserIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.disable_user",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "delete_user",
+      "description": "Permanently delete a PingOne user. Cannot be undone -- unlike Okta's deactivate, PingOne performs a real, irreversible delete.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.user.deleted"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "UserIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.delete_user",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "trigger_password_reset",
+      "description": "Trigger PingOne's own password-reset flow for a user (sends them a reset email/notification).",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.user.password_reset_triggered"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "UserIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.trigger_password_reset",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_user_mfa_devices",
+      "description": "List MFA devices enrolled for a PingOne user.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "ListMfaDevicesParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "PingMfaDevice": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "title": "Status",
+                "type": "string"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "device_id": {
+                "title": "Device Id",
+                "type": "string"
+              },
+              "device_type": {
+                "title": "Device Type",
+                "type": "string"
+              },
+              "nickname": {
+                "title": "Nickname",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "status",
+              "device_id",
+              "device_type",
+              "nickname"
+            ],
+            "title": "PingMfaDevice",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "devices": {
+            "items": {
+              "$ref": "#/$defs/PingMfaDevice"
+            },
+            "title": "Devices",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "devices"
+        ],
+        "title": "MfaDeviceList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_user_mfa_devices",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "remove_user_mfa_device",
+      "description": "Remove one enrolled MFA device from a PingOne user -- use when a user has lost their device.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.user.mfa_device_removed"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          },
+          "device_id": {
+            "description": "PingOne MFA device ID.",
+            "title": "Device Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "device_id"
+        ],
+        "title": "MfaDeviceParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.remove_user_mfa_device",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_populations",
+      "description": "List Populations (directory segments users belong to) in the connected PingOne environment.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListPopulationsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "PingPopulation": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "title": "Description",
+                "type": "string"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "population_id": {
+                "title": "Population Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "user_count": {
+                "title": "User Count",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "description",
+              "population_id",
+              "name",
+              "user_count"
+            ],
+            "title": "PingPopulation",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "populations": {
+            "items": {
+              "$ref": "#/$defs/PingPopulation"
+            },
+            "title": "Populations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "populations"
+        ],
+        "title": "PopulationList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_populations",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "get_population",
+      "description": "Read one PingOne population in full.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "population_id": {
+            "description": "PingOne population ID.",
+            "title": "Population Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "population_id"
+        ],
+        "title": "PopulationIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "population_id": {
+            "title": "Population Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "user_count": {
+            "title": "User Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "population_id",
+          "name",
+          "user_count"
+        ],
+        "title": "PingPopulation",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.get_population",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "create_population",
+      "description": "Create a new PingOne population.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.population.created"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Population name, e.g. 'Employees'.",
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "default": "",
+            "description": "Optional description.",
+            "title": "Description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreatePopulationParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "population_id": {
+            "title": "Population Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "user_count": {
+            "title": "User Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "population_id",
+          "name",
+          "user_count"
+        ],
+        "title": "PingPopulation",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.create_population",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_groups",
+      "description": "List Groups (access-grouping for app assignment) in the connected PingOne environment.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListGroupsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "PingGroup": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "title": "Description",
+                "type": "string"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "group_id": {
+                "title": "Group Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "description",
+              "group_id",
+              "name"
+            ],
+            "title": "PingGroup",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/$defs/PingGroup"
+            },
+            "title": "Groups",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "groups"
+        ],
+        "title": "GroupList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_groups",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "get_group",
+      "description": "Read one PingOne group in full.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "group_id": {
+            "description": "PingOne group ID.",
+            "title": "Group Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "group_id"
+        ],
+        "title": "GroupIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "group_id": {
+            "title": "Group Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "group_id",
+          "name"
+        ],
+        "title": "PingGroup",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.get_group",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "create_group",
+      "description": "Create a new PingOne group.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.group.created"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Group name.",
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "default": "",
+            "description": "Optional description.",
+            "title": "Description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreateGroupParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "group_id": {
+            "title": "Group Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "group_id",
+          "name"
+        ],
+        "title": "PingGroup",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.create_group",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "add_user_to_group",
+      "description": "Add a user to a PingOne group.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.group.member_added"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "group_id": {
+            "description": "PingOne group ID.",
+            "title": "Group Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "group_id",
+          "user_id"
+        ],
+        "title": "GroupMemberParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.add_user_to_group",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "remove_user_from_group",
+      "description": "Remove a user from a PingOne group.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.group.member_removed"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "group_id": {
+            "description": "PingOne group ID.",
+            "title": "Group Id",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "PingOne user ID.",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "group_id",
+          "user_id"
+        ],
+        "title": "GroupMemberParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.remove_user_from_group",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_applications",
+      "description": "List applications (OIDC/SAML) registered in the connected PingOne environment.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListApplicationsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "PingApplication": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "application_id": {
+                "title": "Application Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "protocol": {
+                "title": "Protocol",
+                "type": "string"
+              },
+              "enabled": {
+                "title": "Enabled",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "application_id",
+              "name",
+              "protocol",
+              "enabled"
+            ],
+            "title": "PingApplication",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "applications": {
+            "items": {
+              "$ref": "#/$defs/PingApplication"
+            },
+            "title": "Applications",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "applications"
+        ],
+        "title": "ApplicationList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_applications",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "get_application",
+      "description": "Read one PingOne application in full.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "application_id": {
+            "description": "PingOne application ID.",
+            "title": "Application Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "application_id"
+        ],
+        "title": "ApplicationIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "application_id": {
+            "title": "Application Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "protocol": {
+            "title": "Protocol",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "application_id",
+          "name",
+          "protocol",
+          "enabled"
+        ],
+        "title": "PingApplication",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.get_application",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "enable_application",
+      "description": "Enable a PingOne application.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.application.enabled"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "application_id": {
+            "description": "PingOne application ID.",
+            "title": "Application Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "application_id"
+        ],
+        "title": "ApplicationIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.enable_application",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "disable_application",
+      "description": "Disable a PingOne application.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "ping.application.disabled"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "application_id": {
+            "description": "PingOne application ID.",
+            "title": "Application Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "application_id"
+        ],
+        "title": "ApplicationIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok",
+          "detail"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.disable_application",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_sign_on_policies",
+      "description": "List Sign-On Policies (MFA/adaptive authentication chains) configured in the connected PingOne environment.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListSignOnPoliciesParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "PingSignOnPolicy": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "policy_id": {
+                "title": "Policy Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "is_default": {
+                "title": "Is Default",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "policy_id",
+              "name",
+              "is_default"
+            ],
+            "title": "PingSignOnPolicy",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "policies": {
+            "items": {
+              "$ref": "#/$defs/PingSignOnPolicy"
+            },
+            "title": "Policies",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "policies"
+        ],
+        "title": "SignOnPolicyList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_sign_on_policies",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "get_sign_on_policy",
+      "description": "Read one PingOne sign-on policy in full.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "policy_id": {
+            "description": "PingOne sign-on policy ID.",
+            "title": "Policy Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "policy_id"
+        ],
+        "title": "SignOnPolicyIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "policy_id": {
+            "title": "Policy Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "is_default": {
+            "title": "Is Default",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "policy_id",
+          "name",
+          "is_default"
+        ],
+        "title": "PingSignOnPolicy",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.get_sign_on_policy",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_identity_providers",
+      "description": "List external Identity Providers federated into the connected PingOne environment.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListIdentityProvidersParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "PingIdentityProvider": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "idp_id": {
+                "title": "Idp Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "provider_type": {
+                "title": "Provider Type",
+                "type": "string"
+              },
+              "enabled": {
+                "title": "Enabled",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "idp_id",
+              "name",
+              "provider_type",
+              "enabled"
+            ],
+            "title": "PingIdentityProvider",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "identity_providers": {
+            "items": {
+              "$ref": "#/$defs/PingIdentityProvider"
+            },
+            "title": "Identity Providers",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "identity_providers"
+        ],
+        "title": "IdentityProviderList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_identity_providers",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "get_identity_provider",
+      "description": "Read one PingOne identity provider in full.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "idp_id": {
+            "description": "PingOne identity provider ID.",
+            "title": "Idp Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "idp_id"
+        ],
+        "title": "IdentityProviderIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "idp_id": {
+            "title": "Idp Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "provider_type": {
+            "title": "Provider Type",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "idp_id",
+          "name",
+          "provider_type",
+          "enabled"
+        ],
+        "title": "PingIdentityProvider",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.get_identity_provider",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "list_activities",
+      "description": "List Activity (audit) log events for the connected PingOne environment -- logins, admin actions, MFA events.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "since": {
+            "default": "",
+            "description": "ISO 8601 start time, e.g. '2026-08-01T00:00:00Z'.",
+            "title": "Since",
+            "type": "string"
+          },
+          "until": {
+            "default": "",
+            "description": "ISO 8601 end time.",
+            "title": "Until",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max events to return (1-200).",
+            "title": "Limit",
+            "type": "integer"
+          },
+          "cursor": {
+            "default": "",
+            "description": "Pagination cursor from a previous call's next_cursor.",
+            "title": "Cursor",
+            "type": "string"
+          }
+        },
+        "title": "ListActivitiesParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "ActivityEvent": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "activity_id": {
+                "title": "Activity Id",
+                "type": "string"
+              },
+              "actor": {
+                "title": "Actor",
+                "type": "string"
+              },
+              "action": {
+                "title": "Action",
+                "type": "string"
+              },
+              "target": {
+                "title": "Target",
+                "type": "string"
+              },
+              "result": {
+                "title": "Result",
+                "type": "string"
+              },
+              "recorded_at": {
+                "title": "Recorded At",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "activity_id",
+              "actor",
+              "action",
+              "target",
+              "result",
+              "recorded_at"
+            ],
+            "title": "ActivityEvent",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "activities": {
+            "items": {
+              "$ref": "#/$defs/ActivityEvent"
+            },
+            "title": "Activities",
+            "type": "array"
+          },
+          "next_cursor": {
+            "title": "Next Cursor",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "activities",
+          "next_cursor"
+        ],
+        "title": "ActivityList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.list_activities",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    },
+    {
+      "name": "audit_environment",
+      "description": "Build one aggregated health report for the connected PingOne environment: total/disabled users, disabled applications, and recent failed logins.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved PingOne environment connection ID. Omit to use the first connected environment.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ConnectionRefParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "environment_id": {
+            "title": "Environment Id",
+            "type": "string"
+          },
+          "total_users": {
+            "title": "Total Users",
+            "type": "integer"
+          },
+          "disabled_users": {
+            "title": "Disabled Users",
+            "type": "integer"
+          },
+          "disabled_applications": {
+            "title": "Disabled Applications",
+            "type": "integer"
+          },
+          "failed_logins_24h": {
+            "title": "Failed Logins 24H",
+            "type": "integer"
+          },
+          "notes": {
+            "title": "Notes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "environment_id",
+          "total_users",
+          "disabled_users",
+          "disabled_applications",
+          "failed_logins_24h",
+          "notes"
+        ],
+        "title": "HealthAudit",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "ping-identity-connector.audit_environment",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "ping_identity"
+    }
+  ],
+  "signals": [],
+  "schedules": [],
+  "required_scopes": [],
+  "icon_size_bytes": 592,
+  "lifecycle": {
+    "health_check": {
+      "interval_sec": 60
+    }
+  },
+  "secrets": [
+    {
+      "name": "ping_connections",
+      "description": "JSON list of connected PingOne environments and encrypted Worker App credentials. Managed only through connect_ping and disconnect_ping.",
+      "required": true,
+      "write_mode": "both",
+      "max_bytes": 65536,
+      "scope": "user",
+      "rotation_hint_days": 90
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "secrets",
+      "slot": "right",
+      "title": "Secrets",
+      "tree": {},
+      "icon": "KeyRound",
+      "refresh": "manual",
+      "center_overlay": false
+    }
+  ]
+}
