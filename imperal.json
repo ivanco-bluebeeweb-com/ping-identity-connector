@@ -1,6 +1,6 @@
 {
   "manifest_schema_version": 3,
-  "sdk_version": "5.11.0",
+  "sdk_version": "5.13.0",
   "app_id": "ping-identity-connector",
   "version": "0.1.0",
   "name": "Ping Identity",
@@ -4889,6 +4889,96 @@
       "icon": "KeyRound",
       "refresh": "manual",
       "center_overlay": false
+    },
+    {
+      "panel_id": "ping_sidebar",
+      "slot": "left",
+      "title": "Ping Identity",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "ping_connect_help",
+      "slot": "center",
+      "title": "Connect Ping Identity",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "ping_users",
+      "slot": "center",
+      "title": "Users",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "ping_groups",
+      "slot": "center",
+      "title": "Groups",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "ping_populations",
+      "slot": "center",
+      "title": "Populations",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "ping_applications",
+      "slot": "center",
+      "title": "Applications",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "ping_policies",
+      "slot": "center",
+      "title": "Sign-On Policies",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "ping_idps",
+      "slot": "center",
+      "title": "Identity Providers",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "ping_activity",
+      "slot": "center",
+      "title": "Activity Log",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "ping_settings",
+      "slot": "center",
+      "title": "Ping Identity settings",
+      "tree": {},
+      "icon": "Settings",
+      "refresh": "manual",
+      "center_overlay": true
     }
   ]
 }
