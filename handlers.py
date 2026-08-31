@@ -102,14 +102,14 @@ async def disconnect_ping(ctx, params: DisconnectPingParams) -> ActionResult:
     if len(remaining) == len(connections):
         return ActionResult.error(f"No saved PingOne connection with id '{params.connection_id}'.")
     await _save_connections(ctx, remaining)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="PingOne environment disconnected."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="PingOne environment disconnected."), summary="Ping disconnected.")
 
 
 @chat.function("list_connections", "List the connected PingOne environments.", action_type="read", chain_callable=True, data_model=ConnectionList, event="ping-identity-connector.list_connections")
 async def list_connections(ctx, params: NoParams) -> ActionResult:
     """List the connected PingOne environments."""
     connections = await _load_connections(ctx)
-    return ActionResult.success(data=ConnectionList(connections=[_connection_entity(c) for c in connections]))
+    return ActionResult.success(data=ConnectionList(connections=[_connection_entity(c) for c in connections]), summary="Connections listed.")
 
 
 def _user_entity(u: dict) -> PingUser:
@@ -138,7 +138,7 @@ async def list_users(ctx, params: ListUsersParams) -> ActionResult:
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = (data or {}).get("_embedded", {}).get("users", [])
-    return ActionResult.success(data=UserList(users=[_user_entity(u) for u in items]))
+    return ActionResult.success(data=UserList(users=[_user_entity(u) for u in items]), summary="Users listed.")
 
 
 @chat.function("get_user", "Read one PingOne user in full.", action_type="read", chain_callable=True, data_model=PingUser, event="ping-identity-connector.get_user")
@@ -150,7 +150,7 @@ async def get_user(ctx, params: UserIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/users/{params.user_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_user_entity(data or {}))
+    return ActionResult.success(data=_user_entity(data or {}), summary="User retrieved.")
 
 
 @chat.function("create_user", "Create a new PingOne user in a population.", action_type="write", chain_callable=True, data_model=PingUser, event="ping-identity-connector.create_user", effects=["ping.user.created"])
@@ -170,7 +170,7 @@ async def create_user(ctx, params: CreateUserParams) -> ActionResult:
         data, _ = await client.request("POST", "/users", json_body=body)
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_user_entity(data or {}))
+    return ActionResult.success(data=_user_entity(data or {}), summary="User created.")
 
 
 @chat.function("update_user", "Update selected fields of an existing PingOne user. Only given fields change.", action_type="write", chain_callable=True, data_model=PingUser, event="ping-identity-connector.update_user", effects=["ping.user.updated"])
@@ -187,7 +187,7 @@ async def update_user(ctx, params: UpdateUserParams) -> ActionResult:
         data, _ = await client.request("PATCH", f"/users/{params.user_id}", json_body=body)
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_user_entity(data or {}))
+    return ActionResult.success(data=_user_entity(data or {}), summary="User updated.")
 
 
 @chat.function("enable_user", "Enable a disabled PingOne user, restoring their sign-in access.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.enable_user", effects=["ping.user.enabled"])
@@ -199,7 +199,7 @@ async def enable_user(ctx, params: UserIdParams) -> ActionResult:
         await client.request("PATCH", f"/users/{params.user_id}", json_body={"enabled": True})
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="User enabled."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="User enabled."), summary="Enable user done.")
 
 
 @chat.function("disable_user", "Disable a PingOne user, blocking their sign-in.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.disable_user", effects=["ping.user.disabled"])
@@ -211,7 +211,7 @@ async def disable_user(ctx, params: UserIdParams) -> ActionResult:
         await client.request("PATCH", f"/users/{params.user_id}", json_body={"enabled": False})
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="User disabled."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="User disabled."), summary="Disable user done.")
 
 
 @chat.function("delete_user", "Permanently delete a PingOne user. Cannot be undone -- unlike Okta's deactivate, PingOne performs a real, irreversible delete.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.delete_user", effects=["ping.user.deleted"])
@@ -223,7 +223,7 @@ async def delete_user(ctx, params: UserIdParams) -> ActionResult:
         await client.request("DELETE", f"/users/{params.user_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="User permanently deleted."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="User permanently deleted."), summary="User deleted.")
 
 
 @chat.function("trigger_password_reset", "Trigger PingOne's own password-reset flow for a user (sends them a reset email/notification).", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.trigger_password_reset", effects=["ping.user.password_reset_triggered"])
@@ -235,7 +235,7 @@ async def trigger_password_reset(ctx, params: UserIdParams) -> ActionResult:
         await client.request("POST", f"/users/{params.user_id}/password", json_body={"recovery": {}})
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="Password reset triggered."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="Password reset triggered."), summary="Password reset trigger requested.")
 
 
 def _mfa_entity(d: dict) -> PingMfaDevice:
@@ -257,7 +257,7 @@ async def list_user_mfa_devices(ctx, params: ListMfaDevicesParams) -> ActionResu
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = (data or {}).get("_embedded", {}).get("devices", [])
-    return ActionResult.success(data=MfaDeviceList(devices=[_mfa_entity(d) for d in items]))
+    return ActionResult.success(data=MfaDeviceList(devices=[_mfa_entity(d) for d in items]), summary="User mfa devices listed.")
 
 
 @chat.function("remove_user_mfa_device", "Remove one enrolled MFA device from a PingOne user -- use when a user has lost their device.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.remove_user_mfa_device", effects=["ping.user.mfa_device_removed"])
@@ -269,7 +269,7 @@ async def remove_user_mfa_device(ctx, params: MfaDeviceParams) -> ActionResult:
         await client.request("DELETE", f"/users/{params.user_id}/devices/{params.device_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="MFA device removed; user must re-enroll."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="MFA device removed; user must re-enroll."), summary="User mfa device deleted.")
 
 
 def _population_entity(p: dict) -> PingPopulation:
@@ -291,7 +291,7 @@ async def list_populations(ctx, params: ListPopulationsParams) -> ActionResult:
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = (data or {}).get("_embedded", {}).get("populations", [])
-    return ActionResult.success(data=PopulationList(populations=[_population_entity(p) for p in items]))
+    return ActionResult.success(data=PopulationList(populations=[_population_entity(p) for p in items]), summary="Populations listed.")
 
 
 @chat.function("get_population", "Read one PingOne population in full.", action_type="read", chain_callable=True, data_model=PingPopulation, event="ping-identity-connector.get_population")
@@ -303,7 +303,7 @@ async def get_population(ctx, params: PopulationIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/populations/{params.population_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_population_entity(data or {}))
+    return ActionResult.success(data=_population_entity(data or {}), summary="Population retrieved.")
 
 
 @chat.function("create_population", "Create a new PingOne population.", action_type="write", chain_callable=True, data_model=PingPopulation, event="ping-identity-connector.create_population", effects=["ping.population.created"])
@@ -316,7 +316,7 @@ async def create_population(ctx, params: CreatePopulationParams) -> ActionResult
         data, _ = await client.request("POST", "/populations", json_body=body)
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_population_entity(data or {}))
+    return ActionResult.success(data=_population_entity(data or {}), summary="Population created.")
 
 
 def _group_entity(g: dict) -> PingGroup:
@@ -337,7 +337,7 @@ async def list_groups(ctx, params: ListGroupsParams) -> ActionResult:
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = (data or {}).get("_embedded", {}).get("groups", [])
-    return ActionResult.success(data=GroupList(groups=[_group_entity(g) for g in items]))
+    return ActionResult.success(data=GroupList(groups=[_group_entity(g) for g in items]), summary="Groups listed.")
 
 
 @chat.function("get_group", "Read one PingOne group in full.", action_type="read", chain_callable=True, data_model=PingGroup, event="ping-identity-connector.get_group")
@@ -349,7 +349,7 @@ async def get_group(ctx, params: GroupIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/groups/{params.group_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_group_entity(data or {}))
+    return ActionResult.success(data=_group_entity(data or {}), summary="Group retrieved.")
 
 
 @chat.function("create_group", "Create a new PingOne group.", action_type="write", chain_callable=True, data_model=PingGroup, event="ping-identity-connector.create_group", effects=["ping.group.created"])
@@ -362,7 +362,7 @@ async def create_group(ctx, params: CreateGroupParams) -> ActionResult:
         data, _ = await client.request("POST", "/groups", json_body=body)
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_group_entity(data or {}))
+    return ActionResult.success(data=_group_entity(data or {}), summary="Group created.")
 
 
 @chat.function("add_user_to_group", "Add a user to a PingOne group.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.add_user_to_group", effects=["ping.group.member_added"])
@@ -374,7 +374,7 @@ async def add_user_to_group(ctx, params: GroupMemberParams) -> ActionResult:
         await client.request("POST", f"/groups/{params.group_id}/memberships", json_body={"user": {"id": params.user_id}})
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="User added to group."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="User added to group."), summary="User to group created.")
 
 
 @chat.function("remove_user_from_group", "Remove a user from a PingOne group.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.remove_user_from_group", effects=["ping.group.member_removed"])
@@ -386,7 +386,7 @@ async def remove_user_from_group(ctx, params: GroupMemberParams) -> ActionResult
         await client.request("DELETE", f"/groups/{params.group_id}/memberships/{params.user_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="User removed from group."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="User removed from group."), summary="User from group deleted.")
 
 
 def _app_entity(a: dict) -> PingApplication:
@@ -408,7 +408,7 @@ async def list_applications(ctx, params: ListApplicationsParams) -> ActionResult
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = (data or {}).get("_embedded", {}).get("applications", [])
-    return ActionResult.success(data=ApplicationList(applications=[_app_entity(a) for a in items]))
+    return ActionResult.success(data=ApplicationList(applications=[_app_entity(a) for a in items]), summary="Applications listed.")
 
 
 @chat.function("get_application", "Read one PingOne application in full.", action_type="read", chain_callable=True, data_model=PingApplication, event="ping-identity-connector.get_application")
@@ -420,7 +420,7 @@ async def get_application(ctx, params: ApplicationIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/applications/{params.application_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_app_entity(data or {}))
+    return ActionResult.success(data=_app_entity(data or {}), summary="Application retrieved.")
 
 
 @chat.function("enable_application", "Enable a PingOne application.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.enable_application", effects=["ping.application.enabled"])
@@ -432,7 +432,7 @@ async def enable_application(ctx, params: ApplicationIdParams) -> ActionResult:
         await client.request("PATCH", f"/applications/{params.application_id}", json_body={"enabled": True})
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="Application enabled."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="Application enabled."), summary="Enable application done.")
 
 
 @chat.function("disable_application", "Disable a PingOne application.", action_type="write", chain_callable=True, data_model=DeleteResult, event="ping-identity-connector.disable_application", effects=["ping.application.disabled"])
@@ -444,7 +444,7 @@ async def disable_application(ctx, params: ApplicationIdParams) -> ActionResult:
         await client.request("PATCH", f"/applications/{params.application_id}", json_body={"enabled": False})
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=DeleteResult(ok=True, detail="Application disabled."))
+    return ActionResult.success(data=DeleteResult(ok=True, detail="Application disabled."), summary="Disable application done.")
 
 
 def _policy_entity(p: dict) -> PingSignOnPolicy:
@@ -465,7 +465,7 @@ async def list_sign_on_policies(ctx, params: ListSignOnPoliciesParams) -> Action
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = (data or {}).get("_embedded", {}).get("signOnPolicies", [])
-    return ActionResult.success(data=SignOnPolicyList(policies=[_policy_entity(p) for p in items]))
+    return ActionResult.success(data=SignOnPolicyList(policies=[_policy_entity(p) for p in items]), summary="Sign on policies listed.")
 
 
 @chat.function("get_sign_on_policy", "Read one PingOne sign-on policy in full.", action_type="read", chain_callable=True, data_model=PingSignOnPolicy, event="ping-identity-connector.get_sign_on_policy")
@@ -477,7 +477,7 @@ async def get_sign_on_policy(ctx, params: SignOnPolicyIdParams) -> ActionResult:
         data, _ = await client.request("GET", f"/signOnPolicies/{params.policy_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_policy_entity(data or {}))
+    return ActionResult.success(data=_policy_entity(data or {}), summary="Sign on policy retrieved.")
 
 
 def _idp_entity(i: dict) -> PingIdentityProvider:
@@ -499,7 +499,7 @@ async def list_identity_providers(ctx, params: ListIdentityProvidersParams) -> A
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = (data or {}).get("_embedded", {}).get("identityProviders", [])
-    return ActionResult.success(data=IdentityProviderList(identity_providers=[_idp_entity(i) for i in items]))
+    return ActionResult.success(data=IdentityProviderList(identity_providers=[_idp_entity(i) for i in items]), summary="Identity providers listed.")
 
 
 @chat.function("get_identity_provider", "Read one PingOne identity provider in full.", action_type="read", chain_callable=True, data_model=PingIdentityProvider, event="ping-identity-connector.get_identity_provider")
@@ -511,7 +511,7 @@ async def get_identity_provider(ctx, params: IdentityProviderIdParams) -> Action
         data, _ = await client.request("GET", f"/identityProviders/{params.idp_id}")
     except pc.PingError as exc:
         return ActionResult.error(str(exc), retryable=exc.retryable)
-    return ActionResult.success(data=_idp_entity(data or {}))
+    return ActionResult.success(data=_idp_entity(data or {}), summary="Identity provider retrieved.")
 
 
 def _activity_entity(a: dict) -> ActivityEvent:
@@ -544,7 +544,7 @@ async def list_activities(ctx, params: ListActivitiesParams) -> ActionResult:
         return ActionResult.error(str(exc), retryable=exc.retryable)
     items = (data or {}).get("_embedded", {}).get("activities", [])
     next_cursor = ((data or {}).get("_links", {}) or {}).get("next", {}).get("href", "")
-    return ActionResult.success(data=ActivityList(activities=[_activity_entity(a) for a in items], next_cursor=next_cursor))
+    return ActionResult.success(data=ActivityList(activities=[_activity_entity(a) for a in items], next_cursor=next_cursor), summary="Activities listed.")
 
 
 @chat.function("audit_environment", "Build one aggregated health report for the connected PingOne environment: total/disabled users, disabled applications, and recent failed logins.", action_type="read", chain_callable=True, data_model=HealthAudit, event="ping-identity-connector.audit_environment")
@@ -574,4 +574,4 @@ async def audit_environment(ctx, params: ConnectionRefParams) -> ActionResult:
             f"{len(app_items)} applications ({disabled_apps} disabled), "
             f"{len(failed_items)} failed logins recently."
         ),
-    ))
+    ), summary="Environment audit ready.")
