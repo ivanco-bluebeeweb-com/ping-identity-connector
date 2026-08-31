@@ -123,6 +123,8 @@ class ListActivitiesParams(ConnectionRefParams):
 # ---- SDL entities ----
 
 class PingConnection(sdl.Entity):
+    id: str = ""
+    title: str = ""
     connection_id: str
     label: str
     environment_id: str
@@ -130,10 +132,14 @@ class PingConnection(sdl.Entity):
 
 
 class ConnectionList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     connections: list[PingConnection]
 
 
 class PingUser(sdl.Entity):
+    id: str = ""
+    title: str = ""
     user_id: str
     username: str
     email: str
@@ -144,10 +150,14 @@ class PingUser(sdl.Entity):
 
 
 class UserList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     users: list[PingUser]
 
 
 class PingPopulation(sdl.Entity):
+    id: str = ""
+    title: str = ""
     population_id: str
     name: str
     description: str
@@ -155,20 +165,28 @@ class PingPopulation(sdl.Entity):
 
 
 class PopulationList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     populations: list[PingPopulation]
 
 
 class PingGroup(sdl.Entity):
+    id: str = ""
+    title: str = ""
     group_id: str
     name: str
     description: str
 
 
 class GroupList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     groups: list[PingGroup]
 
 
 class PingApplication(sdl.Entity):
+    id: str = ""
+    title: str = ""
     application_id: str
     name: str
     protocol: str
@@ -176,20 +194,28 @@ class PingApplication(sdl.Entity):
 
 
 class ApplicationList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     applications: list[PingApplication]
 
 
 class PingSignOnPolicy(sdl.Entity):
+    id: str = ""
+    title: str = ""
     policy_id: str
     name: str
     is_default: bool
 
 
 class SignOnPolicyList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     policies: list[PingSignOnPolicy]
 
 
 class PingIdentityProvider(sdl.Entity):
+    id: str = ""
+    title: str = ""
     idp_id: str
     name: str
     provider_type: str
@@ -197,10 +223,14 @@ class PingIdentityProvider(sdl.Entity):
 
 
 class IdentityProviderList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     identity_providers: list[PingIdentityProvider]
 
 
 class PingMfaDevice(sdl.Entity):
+    id: str = ""
+    title: str = ""
     device_id: str
     device_type: str
     status: str
@@ -208,10 +238,14 @@ class PingMfaDevice(sdl.Entity):
 
 
 class MfaDeviceList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     devices: list[PingMfaDevice]
 
 
 class ActivityEvent(sdl.Entity):
+    id: str = ""
+    title: str = ""
     activity_id: str
     actor: str
     action: str
@@ -221,11 +255,15 @@ class ActivityEvent(sdl.Entity):
 
 
 class ActivityList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     activities: list[ActivityEvent]
     next_cursor: str
 
 
 class HealthAudit(sdl.Entity):
+    id: str = ""
+    title: str = ""
     environment_id: str
     total_users: int
     disabled_users: int
@@ -235,5 +273,7 @@ class HealthAudit(sdl.Entity):
 
 
 class DeleteResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     ok: bool
     detail: str
