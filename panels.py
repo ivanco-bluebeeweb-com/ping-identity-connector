@@ -31,8 +31,7 @@ def _field(label: str, node: ui.UINode) -> ui.UINode:
 
 def _settings_button() -> ui.UINode:
     return ui.Button(
-        "App settings", variant="secondary", size="sm", full_width=True,
-        icon="Settings", on_click=ui.Call("__panel__ping_settings"),
+        "App settings", variant="secondary", size="sm", icon="Settings", on_click=ui.Call("__panel__ping_settings"),
     )
 
 
@@ -43,6 +42,9 @@ async def ping_sidebar(ctx, **kwargs) -> ui.UINode:
         return ui.Stack(direction="v", gap=3, align="stretch", children=[
             ui.Button("How do I get this?", variant="ghost", size="sm", icon="HelpCircle",
                       on_click=ui.Call("__panel__ping_connect_help")),
+            ui.Button("Sign in with PingOne (OIDC / SSO)", variant="primary", size="sm", icon="login"),
+            ui.Divider(),
+            ui.Text("Or connect via Worker App Credentials", variant="caption"),
             ui.Form(action="connect_ping", submit_label="Connect", children=[
                 _field("Environment label", ui.Input(param_name="label", placeholder="Acme Production")),
                 _field("Region", ui.Select(param_name="region", options=["NA", "EU", "AP", "CA"], value="NA")),
@@ -56,13 +58,13 @@ async def ping_sidebar(ctx, **kwargs) -> ui.UINode:
     return ui.Stack(direction="v", gap=1, align="start", children=[
         ui.Text(c.get("label") or c.get("environment_id", ""), variant="subtitle"),
         ui.Divider(),
-        ui.Button("Users", variant="ghost", full_width=True, on_click=ui.Call("__panel__ping_users")),
-        ui.Button("Groups", variant="ghost", full_width=True, on_click=ui.Call("__panel__ping_groups")),
-        ui.Button("Populations", variant="ghost", full_width=True, on_click=ui.Call("__panel__ping_populations")),
-        ui.Button("Applications", variant="ghost", full_width=True, on_click=ui.Call("__panel__ping_applications")),
-        ui.Button("Sign-On Policies", variant="ghost", full_width=True, on_click=ui.Call("__panel__ping_policies")),
-        ui.Button("Identity Providers", variant="ghost", full_width=True, on_click=ui.Call("__panel__ping_idps")),
-        ui.Button("Activity Log", variant="ghost", full_width=True, on_click=ui.Call("__panel__ping_activity")),
+        ui.Button("Users", variant="ghost", on_click=ui.Call("__panel__ping_users")),
+        ui.Button("Groups", variant="ghost", on_click=ui.Call("__panel__ping_groups")),
+        ui.Button("Populations", variant="ghost", on_click=ui.Call("__panel__ping_populations")),
+        ui.Button("Applications", variant="ghost", on_click=ui.Call("__panel__ping_applications")),
+        ui.Button("Sign-On Policies", variant="ghost", on_click=ui.Call("__panel__ping_policies")),
+        ui.Button("Identity Providers", variant="ghost", on_click=ui.Call("__panel__ping_idps")),
+        ui.Button("Activity Log", variant="ghost", on_click=ui.Call("__panel__ping_activity")),
         ui.Divider(),
         _settings_button(),
     ])
