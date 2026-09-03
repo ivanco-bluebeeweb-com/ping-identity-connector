@@ -4980,5 +4980,49 @@
       "refresh": "manual",
       "center_overlay": true
     }
-  ]
+  ],
+  "pricing": {
+    "model": "per_action",
+    "currency": "credits",
+    "monthly_price": 0,
+    "free_tools": [
+      "connect_ping",
+      "disconnect_ping",
+      "list_connections"
+    ],
+    "tool_prices": {
+      "connect_ping": 0,
+      "disconnect_ping": 0,
+      "list_connections": 0,
+      "list_users": 8,
+      "get_user": 8,
+      "create_user": 16,
+      "update_user": 16,
+      "enable_user": 16,
+      "disable_user": 16,
+      "delete_user": 16,
+      "trigger_password_reset": 16,
+      "list_user_mfa_devices": 8,
+      "remove_user_mfa_device": 16,
+      "list_populations": 8,
+      "get_population": 8,
+      "create_population": 16,
+      "list_groups": 8,
+      "get_group": 8,
+      "create_group": 16,
+      "add_user_to_group": 16,
+      "remove_user_from_group": 16,
+      "list_applications": 8,
+      "get_application": 8,
+      "enable_application": 16,
+      "disable_application": 16,
+      "list_sign_on_policies": 8,
+      "get_sign_on_policy": 8,
+      "list_identity_providers": 8,
+      "get_identity_provider": 8,
+      "list_activities": 8,
+      "audit_environment": 20
+    },
+    "notes": "Standard platform scale {0, 8, 16, 20, 40}. 0 = access setup and harmless discovery. 8 = read/list/search. 16 = standard single mutation/CRUD. 20 = bulk or heavy audit operation."
+  }
 }
